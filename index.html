@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>الخطة التدفقية - مدرسة جدحفص الثانوية للبنات</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f0f4f8;color:#1a202c;direction:rtl;font-size:14px}
+:root{--primary:#1b4332;--pl:#2d6a4f;--pa:#52b788;--acc:#f77f00;--danger:#e63946;--border:#dee2e6;--muted:#6c757d;--card:#fff}
+.app{min-height:100vh}
+header{background:var(--primary);color:#fff;padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+header h1{font-size:1rem;font-weight:600}
+header .sub{font-size:.75rem;opacity:.75}
+.hbtns{display:flex;gap:.4rem;flex-wrap:wrap}
+.btn{padding:.45rem .9rem;border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;transition:.15s;direction:rtl;white-space:nowrap}
+.btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.btn-ghost:hover{background:rgba(255,255,255,.25)}
+.btn-ghost.active{background:rgba(255,255,255,.3);font-weight:700;border-color:rgba(255,255,255,.6)}
+.btn-p{background:var(--pa);color:#fff}.btn-p:hover{background:#40916c}
+.btn-d{background:var(--danger);color:#fff}.btn-d:hover{background:#c1121f}
+.btn-s{background:#198754;color:#fff}
+.btn-b{background:#0d6efd;color:#fff}
+.btn-gray{background:#6c757d;color:#fff}
+.statsbar{background:#fff;padding:.6rem 1.25rem;display:flex;gap:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.stat{text-align:center;min-width:60px}
+.stat-n{font-size:1.3rem;font-weight:700;color:var(--pl);line-height:1}
+.stat-l{font-size:.68rem;color:var(--muted);margin-top:2px}
+.page{display:none;padding:1.25rem;max-width:1400px;margin:0 auto}
+.page.active{display:block}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:.9rem}
+.mcard{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.mhead{padding:.65rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;gap:.5rem}
+.mhead:hover{background:#f8f9fa}
+.mname{font-weight:600;font-size:.9rem;color:var(--primary)}
+.mbadge{border-radius:20px;padding:.15rem .55rem;font-size:.72rem;font-weight:700;color:#fff;background:var(--pl)}
+.mbadge.full{background:#198754}
+.mprog{height:4px;background:#e9ecef}
+.mprogf{height:100%;background:var(--pa);transition:.4s}
+.mbody{display:none;padding:.5rem .9rem .9rem}
+.mbody.open{display:block}
+.psec{margin-top:.65rem}
+.ptitle{font-size:.78rem;font-weight:700;color:var(--acc);padding:.3rem 0;border-bottom:1px solid #f0f0f0;margin-bottom:.35rem}
+.iitem{display:flex;align-items:flex-start;gap:.45rem;padding:.3rem 0;border-bottom:1px solid #fafafa}
+.iitem:last-child{border-bottom:none}
+.itext{font-size:.78rem;color:#2d3748;line-height:1.45;flex:1}
+.itext.done{text-decoration:line-through;color:var(--muted)}
+.iresponsible{font-size:.68rem;color:var(--muted);margin-top:2px}
+.istat{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px}
+.istat.done-dot{background:#d8f3dc;color:#2d6a4f}
+.istat.pending-dot{background:#f8f9fa;border:1px solid var(--border);color:transparent}
+.icb{width:15px;height:15px;border-radius:4px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:2px;accent-color:var(--pa)}
+.sec-card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:1.1rem 1.25rem;margin-bottom:1rem}
+.sec-card h3{font-size:.95rem;font-weight:600;color:var(--primary);margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem}
+.action-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem;margin-bottom:1.1rem}
+.acard{background:#fff;border-radius:10px;border:1px solid var(--border);padding:1rem;cursor:pointer;transition:.15s;text-align:center}
+.acard:hover{border-color:var(--pa);box-shadow:0 2px 8px rgba(82,183,136,.15)}
+.acard-icon{font-size:1.8rem;margin-bottom:.35rem}
+.acard-title{font-weight:600;color:var(--primary);font-size:.82rem}
+.acard-desc{font-size:.72rem;color:var(--muted);margin-top:.2rem}
+.rprog-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.5rem}
+.rprog-label{font-size:.75rem;color:var(--muted);flex-shrink:0;text-align:right}
+.rprog-bar{flex:1;height:7px;background:#e9ecef;border-radius:4px;overflow:hidden}
+.rprog-fill{height:100%;border-radius:4px;transition:.5s}
+.rprog-pct{font-size:.75rem;font-weight:700;color:var(--pl);flex-shrink:0;min-width:32px}
+.rprog-count{font-size:.68rem;color:var(--muted);flex-shrink:0;min-width:40px}
+.insight{padding:.6rem .9rem;border-radius:8px;font-size:.78rem;margin-bottom:.4rem;display:flex;gap:.4rem;align-items:flex-start}
+.insight.tip{background:#d8f3dc;color:#1b4332;border-right:3px solid #2d6a4f}
+.insight.warn{background:#fff3cd;color:#7d5a00;border-right:3px solid var(--acc)}
+.insight.info{background:#e7f3ff;color:#0a3d7a;border-right:3px solid #0d6efd}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin-bottom:.9rem}
+.kpi{background:#f8f9fa;border-radius:8px;padding:.7rem;text-align:center;border:1px solid var(--border)}
+.kpi-n{font-size:1.4rem;font-weight:700;color:var(--pl)}
+.kpi-l{font-size:.68rem;color:var(--muted);margin-top:2px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.75rem;width:90%;max-width:400px;position:relative}
+.modal h3{font-size:1rem;font-weight:600;margin-bottom:.9rem;color:var(--primary)}
+.modal input,.modal select{width:100%;padding:.55rem .8rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.9rem;margin-bottom:.75rem}
+.modal input:focus{outline:2px solid var(--pa)}
+.mbtns{display:flex;gap:.4rem;justify-content:flex-end}
+.errmsg{color:var(--danger);font-size:.75rem;margin-bottom:.5rem;display:none}
+.xbtn{position:absolute;top:.9rem;left:.9rem;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted)}
+.upzone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;cursor:pointer;transition:.2s}
+.upzone:hover{border-color:var(--pa);background:#f0faf5}
+.upzone input{display:none}
+.pwdlist{list-style:none;margin-top:.6rem}
+.pwditem{display:flex;align-items:center;justify-content:space-between;padding:.45rem .7rem;background:#f8f9fa;border-radius:7px;margin-bottom:.35rem;font-size:.8rem}
+.pwddel{background:none;border:none;color:var(--danger);cursor:pointer;font-size:.9rem}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem;align-items:center}
+.filters select{padding:.4rem .7rem;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:.8rem;background:#fff}
+.save-indicator{position:fixed;bottom:1rem;left:1rem;background:#1b4332;color:#fff;padding:.4rem .9rem;border-radius:20px;font-size:.75rem;opacity:0;transition:.3s;z-index:999}
+.save-indicator.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><h1>🏫 الخطة التدفقية للمدرسة</h1><div class="sub">مدرسة جدحفص الثانوية للبنات</div></div>
+  <div class="hbtns">
+    <button class="btn btn-ghost active" id="btn-main" onclick="goPage('main')">🏠 الرئيسية</button>
+    <button class="btn btn-ghost" id="btn-follow" onclick="openLogin('follow')">📋 المتابعة</button>
+    <button class="btn btn-ghost" id="btn-admin" onclick="openLogin('admin')">⚙️ الإدارة</button>
+  </div>
+</header>
+
+<div class="statsbar">
+  <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">إجمالي الإجراءات</div></div>
+  <div class="stat"><div class="stat-n" id="s-done">0</div><div class="stat-l">تم التنفيذ</div></div>
+  <div class="stat"><div class="stat-n" id="s-pct">0%</div><div class="stat-l">نسبة الإنجاز</div></div>
+  <div class="stat"><div class="stat-n" id="s-projs">0</div><div class="stat-l">المشاريع</div></div>
+  <div class="stat"><div class="stat-n" id="s-thismonth">0</div><div class="stat-l">إجراءات هذا الشهر</div></div>
+</div>
+
+<!-- MAIN -->
+<div class="page active" id="page-main">
+  <div class="mgrid" id="mainGrid"></div>
+</div>
+
+<!-- FOLLOW -->
+<div class="page" id="page-follow">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+    <div style="font-weight:600;color:var(--primary);font-size:1rem">📋 صفحة المتابعة</div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-b" onclick="openPrintDialog()">🖨️ طباعة مشروع</button>
+      <button class="btn btn-gray" onclick="logoutFollow()">خروج</button>
+    </div>
+  </div>
+  <div class="filters">
+    <select id="flt-proj" onchange="renderFollow()"><option value="">كل المشاريع</option></select>
+    <select id="flt-month" onchange="renderFollow()"><option value="">كل الأشهر</option></select>
+    <select id="flt-status" onchange="renderFollow()">
+      <option value="">كل الحالات</option>
+      <option value="done">تم التنفيذ</option>
+      <option value="pending">لم يتم بعد</option>
+    </select>
+  </div>
+  <div id="followGrid"></div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+    <div style="font-weight:600;color:var(--primary);font-size:1rem">⚙️ لوحة الإدارة</div>
+    <button class="btn btn-d" onclick="logoutAdmin()">تسجيل الخروج</button>
+  </div>
+  <div style="display:flex;gap:.35rem;margin-bottom:1rem;flex-wrap:wrap">
+    <button class="btn btn-p" id="atab-actions" onclick="openAdminTab('actions')">✅ تحديث الإنجاز</button>
+    <button class="btn btn-gray" id="atab-reports" onclick="openAdminTab('reports')">📊 التقارير</button>
+    <button class="btn btn-gray" id="atab-tools" onclick="openAdminTab('tools')">🛠️ الأدوات</button>
+    <button class="btn btn-gray" id="atab-passwords" onclick="openAdminTab('passwords')">🔐 كلمات المرور</button>
+  </div>
+
+  <div id="asec-actions">
+    <div class="filters">
+      <select id="aflt-proj" onchange="renderAdminActions()"><option value="">كل المشاريع</option></select>
+      <select id="aflt-month" onchange="renderAdminActions()"><option value="">كل الأشهر</option></select>
+    </div>
+    <div id="adminActionsGrid"></div>
+  </div>
+
+  <div id="asec-reports" style="display:none">
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="sec-card"><h3>📅 الإنجاز الشهري</h3><div id="rep-monthly"></div></div>
+    <div class="sec-card"><h3>📁 إنجاز المشاريع</h3><div id="rep-projects"></div></div>
+    <div class="sec-card"><h3>💡 ملاحظات وتوصيات</h3><div id="rep-insights"></div></div>
+  </div>
+
+  <div id="asec-tools" style="display:none">
+    <div class="action-grid">
+      <div class="acard" onclick="openAdminSub('upload')"><div class="acard-icon">📂</div><div class="acard-title">تحميل / تحديث الخطة</div><div class="acard-desc">رفع ملف الخطة التنفيذية</div></div>
+      <div class="acard" onclick="exportExcel()"><div class="acard-icon">📊</div><div class="acard-title">تصدير Excel</div><div class="acard-desc">الخطة كاملة مع حالة الإنجاز</div></div>
+      <div class="acard" onclick="openPrintDialog()"><div class="acard-icon">🖨️</div><div class="acard-title">طباعة مشروع</div><div class="acard-desc">طباعة خطة مشروع محدد</div></div>
+      <div class="acard" onclick="resetAll()"><div class="acard-icon">🔄</div><div class="acard-title">إعادة تعيين الإنجاز</div><div class="acard-desc">مسح جميع الإنجازات المسجلة</div></div>
+    </div>
+    <div id="asub-upload" class="sec-card" style="display:none">
+      <h3>📂 تحميل / تحديث ملف الخطة</h3>
+      <div class="upzone" onclick="document.getElementById('planFile').click()">
+        <input type="file" id="planFile" accept=".txt" onchange="loadPlanFile(this)">
+        <div style="font-size:2rem;margin-bottom:.35rem">📄</div>
+        <div style="font-size:.82rem;color:var(--muted)">اسحب ملف نصي (.txt) هنا أو <strong style="color:var(--pl)">اختر ملفاً</strong></div>
+      </div>
+      <div id="uploadStatus" style="margin-top:.6rem;font-size:.8rem;color:var(--pl)"></div>
+      <div style="margin-top:.75rem">
+        <button class="btn btn-p" onclick="loadBuiltinPlan()">📋 تحميل الخطة المضمنة</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="asec-passwords" style="display:none">
+    <div class="sec-card">
+      <h3>🔐 كلمات مرور المتابعة</h3>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:.75rem">هذه الكلمات تتيح الدخول لصفحة المتابعة فقط</p>
+      <div style="display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap">
+        <input type="text" id="newPwdUser" placeholder="اسم المستخدم (اختياري)" style="flex:1;min-width:120px;padding:.45rem .7rem;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:.8rem">
+        <input type="password" id="newPwd" placeholder="كلمة المرور" style="flex:1;min-width:120px;padding:.45rem .7rem;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:.8rem;direction:ltr">
+        <button class="btn btn-p" onclick="addFollowPwd()">إضافة</button>
+      </div>
+      <ul class="pwdlist" id="pwdList"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Print Modal -->
+<div class="overlay" id="printModal">
+  <div class="modal">
+    <button class="xbtn" onclick="closeModal('printModal')">✕</button>
+    <h3>🖨️ طباعة خطة مشروع</h3>
+    <select id="printSel" style="direction:rtl"></select>
+    <div class="mbtns">
+      <button class="btn btn-gray" onclick="closeModal('printModal')">إلغاء</button>
+      <button class="btn btn-p" onclick="doPrint()">طباعة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="overlay" id="loginModal">
+  <div class="modal">
+    <button class="xbtn" onclick="closeModal('loginModal')">✕</button>
+    <h3 id="loginTitle">🔐 تسجيل الدخول</h3>
+    <input type="password" id="loginPwd" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="errmsg" id="loginErr">كلمة المرور غير صحيحة</div>
+    <div class="mbtns">
+      <button class="btn btn-gray" onclick="closeModal('loginModal')">إلغاء</button>
+      <button class="btn btn-p" onclick="doLogin()">دخول</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveInd">💾 تم الحفظ</div>
+
+<script>
+// ============ CONSTANTS ============
+const MONTHS=[
+  {id:'sep',name:'سبتمبر'},{id:'oct',name:'أكتوبر'},{id:'nov',name:'نوفمبر'},
+  {id:'dec',name:'ديسمبر'},{id:'jan',name:'يناير'},{id:'feb',name:'فبراير'},
+  {id:'mar',name:'مارس'},{id:'apr',name:'أبريل'},{id:'may',name:'مايو'},{id:'jun',name:'يونيو'}
+];
+const CURRENT_MONTH='may';
+const LS_CHECKED='jidhafs_checked';
+const LS_PLAN='jidhafs_plan';
+const LS_FOLLOWPWDS='jidhafs_followpwds';
+const LS_ADMINPWD='jidhafs_adminpwd';
+
+// ============ STATE ============
+let planData=null;
+let checked={};
+let adminPwd='';
+let followPwds=[];
+let loginTarget='admin';
+let isAdmin=false;
+let isFollow=false;
+let openMonths={};
+let saveTimer=null;
+
+// ============ LOCALSTORAGE ============
+function lsGet(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function saveChecked(){
+  lsSet(LS_CHECKED,checked);
+  showSaveIndicator();
+}
+function savePlan(){lsSet(LS_PLAN,planData);}
+function savePasswords(){lsSet(LS_FOLLOWPWDS,followPwds);lsSet(LS_ADMINPWD,adminPwd);}
+
+function showSaveIndicator(){
+  const el=document.getElementById('saveInd');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+function loadFromStorage(){
+  // Admin password
+  adminPwd=lsGet(LS_ADMINPWD,'admin123');
+  // Follow passwords
+  followPwds=lsGet(LS_FOLLOWPWDS,['follow123']);
+  // Checked state
+  checked=lsGet(LS_CHECKED,{});
+  // Plan data
+  const saved=lsGet(LS_PLAN,null);
+  if(saved&&saved.projects&&saved.projects.length){
+    planData=saved;
+  } else {
+    planData=buildPlan();
+    savePlan();
+  }
+}
+
+// ============ PLAN DATA ============
+function buildPlan(){
+  return {projects:[
+    {name:'بإتقاني أرتقي',initiatives:[
+      {text:'إصدار قرار تشكيل فريق المتابعة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع أ/ صفاء السيد',month:'oct'},
+      {text:'استلام نتائج الاختبارات التشخيصية وتحليلها من الأقسام',resp:'المديرة المساعدة / مسؤولة الملف',month:'oct'},
+      {text:'متابعة الأقسام في وضع خطة علاجية مبكرة لرفع نسب الإتقان',resp:'المديرة المساعدة',month:'oct'},
+      {text:'إعداد التقرير النهائي للاختبارات التشخيصية وإرساله',resp:'المديرة المساعدة / مسؤولة الملف',month:'mar'},
+      {text:'استلام نتائج الاختبارات التكوينية وتحليلها',resp:'المديرة المساعدة / مسؤولة الملف',month:'jan'},
+      {text:'تحليل نسب النجاح والإتقان ومقارنتها بالعام السابق',resp:'جميع الأقسام الأكاديمية',month:'jan'},
+      {text:'إعداد التقرير النهائي للاختبارات التكوينية وإرساله',resp:'المديرة المساعدة / مسؤولة الملف',month:'jun'},
+      {text:'متابعة التحصيل الدراسي لكل شعبة بناءً على القيمة المضافة',resp:'مكتب الإرشاد الأكاديمي',month:'jan'},
+      {text:'مقابلة كل طالبة انخفض معدلها التراكمي',resp:'مكتب الإرشاد الأكاديمي',month:'jun'},
+      {text:'تتبع الفوج من المدخلات إلى المخرجات',resp:'مكتب الإرشاد الأكاديمي',month:'jan'},
+      {text:'اعتماد قرار تشكيل لجنة النخبة (الطالبات الفائقات)',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إصدار كشف بأسماء الطالبات ذوات المعدلات 98% فما فوق',resp:'مكتب الإرشاد الأكاديمي',month:'sep'},
+      {text:'إصدار كشف الطالبات الفائقات للفصل الثاني',resp:'مكتب الإرشاد الأكاديمي',month:'feb'},
+      {text:'رفع وتعزيز كفاءات الطالبات الفائقات العلمية والقيادية',resp:'جميع الأقسام الأكاديمية',month:'jan'},
+      {text:'اعتماد قرار تشكيل لجنة المتفوقات',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إصدار كشف المتفوقات (90%-97.9%)',resp:'مكتب الإرشاد الأكاديمي',month:'sep'},
+      {text:'التواصل مع المدارس الإعدادية الرافدة للحصول على كشوف النتائج',resp:'مكتب الإرشاد الأكاديمي',month:'sep'},
+      {text:'وضع جدولة لإعداد الاختبارات التكوينية - الفصل الأول',resp:'جميع الأقسام الأكاديمية',month:'dec'},
+      {text:'وضع جدولة لإعداد الاختبارات التكوينية - الفصل الثاني',resp:'جميع الأقسام الأكاديمية',month:'feb'},
+      {text:'تحليل نتائج الاختبارات التكوينية - أكتوبر',resp:'المعلمة الأولى للقسم',month:'oct'},
+      {text:'تحليل نتائج الاختبارات التكوينية - مارس',resp:'المعلمة الأولى للقسم',month:'mar'},
+      {text:'إعداد حقائب تعليمية إثرائية وعلاجية داعمة',resp:'جميع الأقسام الأكاديمية',month:'jan'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'الامتحانات الوطنية - واجب وطني',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع الامتحانات الوطنية',resp:'المديرة المساعدة أ.زهرة الدغاس',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع أ/ زهرة رضي',month:'oct'},
+      {text:'إعداد نماذج لكتابة رسائل جوابية - اللغة العربية',resp:'قسم اللغة العربية / معلمات المستوى الثالث',month:'sep'},
+      {text:'تكليف الطالبات بكتابة رسالة جوابية',resp:'قسم اللغة العربية',month:'feb'},
+      {text:'إعداد نماذج لكتابة تقرير مبني على معلومات موثوقة',resp:'قسم اللغة العربية / المستوى الثالث',month:'oct'},
+      {text:'إعداد نماذج لكتابة نص نثري',resp:'قسم اللغة العربية / المستوى الثالث',month:'nov'},
+      {text:'إعداد نماذج للنص السردي أو غير السردي',resp:'قسم اللغة العربية / المستوى الثالث',month:'feb'},
+      {text:'إعداد استمارة مبادئ الرياضيات الأساسية',resp:'قسم الرياضيات / معلمات المستوى الثالث',month:'oct'},
+      {text:'إعداد 3 نماذج أسئلة متدرجة - تدريب الرياضيات',resp:'قسم الرياضيات / المستوى الثالث',month:'oct'},
+      {text:'تدريب (1) - استخلاص البيانات ومعالجتها',resp:'قسم الرياضيات / المستوى الثالث',month:'nov'},
+      {text:'تدريب (2) - حل المشكلات والاستدلال المكاني',resp:'قسم الرياضيات / المستوى الثالث',month:'dec'},
+      {text:'تدريب (3) - اختيار النماذج واتخاذ القرارات',resp:'قسم الرياضيات / المستوى الثالث',month:'feb'},
+      {text:'إعداد نماذج لكتابة رسالة رسمية - الإنجليزية',resp:'قسم اللغة الإنجليزية / المستوى الثالث',month:'oct'},
+      {text:'إعداد نماذج لكتابة مقال حجاجي',resp:'قسم اللغة الإنجليزية / المستوى الثالث',month:'oct'},
+      {text:'قياس المستوى اللغوي في مهارة الاستماع',resp:'قسم اللغة الإنجليزية / المستوى الثالث',month:'dec'},
+      {text:'قياس المستوى اللغوي في مهارة القراءة',resp:'قسم اللغة الإنجليزية / المستوى الثالث',month:'feb'},
+      {text:'نشر ثقافة الامتحانات الوطنية للطالبات وأولياء الأمور',resp:'الهيئتين الإدارية والتعليمية / اللجنة الإعلامية',month:'mar'},
+      {text:'عرض ومناقشة نتائج الامتحانات الوطنية في اجتماع فريق التحسين',resp:'إدارة المدرسة / رئيسات الأقسام',month:'sep'},
+      {text:'إعداد مقارنات بين نتائج الامتحانات الوطنية على مدى السنوات السابقة',resp:'إدارة المدرسة / رئيسات الأقسام',month:'sep'},
+      {text:'تجميع نماذج الامتحانات السابقة كحقائب تدريبية',resp:'إدارة المدرسة / جميع الأقسام الأساسية',month:'feb'},
+      {text:'الاستعداد للمشاركة في المسابقات والمعارض الخارجية',resp:'إدارة المدرسة / رئيسات الأقسام',month:'mar'},
+      {text:'تنسيق حصص تدريب الطالبات - أسبوع التدريب',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'mar'},
+      {text:'تنفيذ مسابقة في الإذاعة الصباحية لتدريب الطالبات',resp:'قسم اللغة العربية',month:'mar'},
+      {text:'تصميم موقع إلكتروني - الامتحانات الوطنية واجب وطني',resp:'إدارة المدرسة / قسم التمكين الرقمي',month:'apr'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'نون والقلم',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع نون والقلم',resp:'المديرة المساعدة أ.زهرة الدغاس',month:'sep'},
+      {text:'تشكيل الفريق الطلابي للمشروع مع تحديد المهام',resp:'رئيسة المشروع علياء الفردان',month:'oct'},
+      {text:'إعداد خطة تنفيذية للمشروع ومتابعة تنفيذها',resp:'رئيسة المشروع',month:'oct'},
+      {text:'إعلام الطالبات بالشروط الواجب توافرها في الأعمال التحريرية',resp:'جميع الأقسام الأكاديمية / المعلمة الأولى',month:'may'},
+      {text:'تعميم توصيات فريق التحسين حول آلية متابعة الأعمال التحريرية',resp:'رئيسة المشروع',month:'may'},
+      {text:'متابعة مدى تقدم الطالبات في الأعمال التحريرية',resp:'جميع الأقسام الأكاديمية / معلمات الشعب',month:'jan'},
+      {text:'توظيف الأعمال التحريرية في البيئة المدرسية',resp:'جميع الأقسام الأكاديمية',month:'jan'},
+      {text:'إجراء استطلاع رأي أولياء الأمور حول الأعمال الكتابية',resp:'رئيسة مشروع نون والقلم',month:'nov'},
+      {text:'إجراء استطلاع رأي الطالبات حول الأعمال الكتابية',resp:'رئيسة مشروع نون والقلم',month:'apr'},
+      {text:'مبادرة الكتابة عبر الذكاء الاصطناعي',resp:'اختصاصية التمكين الرقمي / مركز مصادر التعلم',month:'apr'},
+      {text:'توثيق وأرشفة أدلة تنفيذ المشروع',resp:'رئيسة المشروع',month:'jun'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع أ/ علياء الفردان',month:'jun'},
+    ]},
+    {name:'اقرأ وربك الأكرم',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة المشروع',resp:'المديرة المساعدة أ.زهرة الدغاس',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع لنشر ثقافة القراءة',resp:'رئيسة المشروع',month:'oct'},
+      {text:'وضع بند في خطة الدرس خاص بتحدي القراءة',resp:'إدارة المدرسة',month:'may'},
+      {text:'حصر الطالبات الراغبات في مسابقة تحدي القراءة العربي',resp:'رئيسة المشروع / اختصاصية مركز مصادر التعلم',month:'apr'},
+      {text:'تسجيل الطالبات المشاركات في موقع تحدي القراءة',resp:'رئيسة المشروع / اختصاصية مركز مصادر التعلم',month:'apr'},
+      {text:'تشكيل فريق التحكيم الداخلي لمسابقة تحدي القراءة',resp:'قسم اللغة العربية',month:'apr'},
+      {text:'إنشاء المكتبة الصفية في الصفوف وممرات المدرسة',resp:'رئيسة المشروع / اختصاصية مركز مصادر التعلم',month:'oct'},
+      {text:'استضافة الطالبتين المكفوفتين في حصص المصادر',resp:'اختصاصية مركز مصادر التعلم',month:'oct'},
+      {text:'تنفيذ مبادرة القراءة أسلوب حياة في الفسحة والطابور',resp:'اختصاصية مركز مصادر التعلم',month:'feb'},
+      {text:'دعوة أولياء الأمور لمناقشة كتاب - الحلقات القرائية',resp:'رئيسة المشروع / اختصاصية مركز مصادر التعلم',month:'oct'},
+      {text:'التعاون مع المكتبات المحلية - مركز السنابس الثقافي',resp:'اختصاصية مركز مصادر التعلم',month:'oct'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'حصاد الهمم',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع حصاد الهمم',resp:'المديرة المساعدة أ.سامية سلمان',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة الحالات الصحية والمرضية',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة اللجنة الصحية ومتابعة تنفيذها',resp:'قائدة اللجنة',month:'oct'},
+      {text:'حصر وإعداد قوائم مبدئية للطالبات ذوات الهمم',resp:'إدارة المدرسة / المرشدات الاجتماعيات',month:'sep'},
+      {text:'ملء استمارة حصر الطالبات ذوات الهمم ورفعها لوزارة التربية',resp:'المرشدات الاجتماعيات',month:'oct'},
+      {text:'هيئة البيئة الفيزيائية للطالبات ذوات الهمم',resp:'مكتب الإرشاد الاجتماعي',month:'sep'},
+      {text:'توفير الرعاية التامة لذوات الهمم طوال العام',resp:'إدارة المدرسة',month:'jan'},
+      {text:'التواصل المستمر مع الطالبات ذوات الهمم وأولياء أمورهن',resp:'المرشدات الاجتماعيات',month:'jan'},
+      {text:'إشراك الطالبات ذوات الهمم في الحياة المدرسية',resp:'جميع منتسبات المدرسة',month:'jan'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع أ.عبير الشهابي',month:'jun'},
+    ]},
+    {name:'أترك بصمة',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع أترك بصمة',resp:'المديرة المساعدة أ.زهرة الدغاس',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة صدى جدحفص - الإذاعة المدرسية',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد جدولة للتفعيل والاحتفاء بالمناسبات',resp:'جميع منتسي المدرسة',month:'apr'},
+      {text:'اعتماد قرار تشكيل لجنة التعلم الإلكتروني الطلابية',resp:'المديرة المساعدة',month:'sep'},
+      {text:'تقديم الأنشطة والمبادرات الرقمية في البيئة المدرسية',resp:'عضوات اللجنة',month:'jan'},
+      {text:'اعتماد قرار تشكيل مركز اللياقة البدنية',resp:'المديرة المساعدة أ.سامية سلمان',month:'sep'},
+      {text:'تفعيل مركز اللياقة البدنية ورفع مستوى اللياقة',resp:'عضوات المركز',month:'jan'},
+      {text:'اعتماد قرار تشكيل فرقة مرشدات جدحفص',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة الصحافة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة التجويد',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة التصميم الإلكتروني E-Design',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة اليونسكو',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة البيئة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة الفضاء',resp:'المديرة المساعدة',month:'sep'},
+      {text:'المشاركة في مسابقة أثر قيم التعلم في البيئة المدرسية',resp:'جميع منتسبي المدرسة',month:'may'},
+      {text:'تنسيق الأنشطة والمسابقات المحلية والإقليمية والدولية',resp:'منسقة الأنشطة',month:'jan'},
+      {text:'معرض على ضفاف العلوم 8 على مستوى المدارس الثانوية',resp:'قسم العلوم / جميع المعلمات',month:'may'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع أ.نبيلة السماك',month:'jun'},
+    ]},
+    {name:'نافذة على المستقبل',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع نافذة على المستقبل',resp:'المديرة المساعدة',month:'sep'},
+      {text:'هيئة الطالبات المستجدات بدعم أكاديمي وشخصي',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'jan'},
+      {text:'متابعة الطالبات المرفعات في المواد الدراسية',resp:'الأقسام الأكاديمية',month:'oct'},
+      {text:'اعتماد قرار تشكيل لجنة حفل التخرج',resp:'المديرة المساعدة',month:'sep'},
+      {text:'تدريب الخريجات على إلقاء كلمة التخرج بالعربية',resp:'قسم اللغة العربية',month:'jun'},
+      {text:'تدريب الخريجات على إلقاء كلمة التخرج بالإنجليزية',resp:'قسم اللغة الإنجليزية',month:'jun'},
+      {text:'اعتماد قرار تشكيل لجنة الطالبات الموهوبات',resp:'المديرة المساعدة أ.زهرة الدغاس',month:'sep'},
+      {text:'عمل جولات ميدانية للطالبات لتعريفهن على مرافق المدرسة',resp:'مكتب الإرشاد الاجتماعي',month:'sep'},
+      {text:'شرح الدراسة بنظام الساعات المعتمدة وآلية اختيار التخصص',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'sep'},
+      {text:'تنظيم زيارات ميدانية لمؤسسات العمل والجامعات المحلية',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'may'},
+      {text:'إعداد ركن للجامعات العالمية في مركز مصادر التعلم',resp:'اختصاصية مركز مصادر التعلم',month:'oct'},
+      {text:'تأهيل الطالبات لاختبار القدرات العامة المطور',resp:'مكتب الإرشاد الأكاديمي بالتعاون مع الأقسام',month:'apr'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'بانتظامي أرتقي [السلوك]',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع بانتظامي أرتقي',resp:'المديرة المساعدة أ/زهرة الدغاس',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع أ/ جليلة السيدهاشم',month:'oct'},
+      {text:'تفعيل فريق الإشراف الإداري لضبط سلوك الطالبات',resp:'المديرة المساعدة / مسؤولة الملف',month:'jan'},
+      {text:'اعتماد قرار تشكيل لجنة المواطنة',resp:'المديرة المساعدة',month:'jun'},
+      {text:'احتفال الطالبات بالمولد النبوي الشريف',resp:'قائدة اللجنة',month:'oct'},
+      {text:'احتفال الطالبات بالعيد الوطني المجيد',resp:'لجنة المواطنة',month:'dec'},
+      {text:'احتفال الطالبات بشهر رمضان - توزيع السلة الرمضانية',resp:'المرشدات الاجتماعيات',month:'feb'},
+      {text:'اعتماد قرار تشكيل المجلس الطلابي',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة المجلس الطلابي ومتابعة تنفيذها',resp:'قائدة المجلس الطلابي',month:'oct'},
+      {text:'إعداد سجل يومي لمتابعة الغياب والتأخير الصباحي',resp:'المرشدات الاجتماعيات',month:'sep'},
+      {text:'حصر أسباب الغياب عند الاختبارات التكوينية - نوفمبر',resp:'المرشدات الاجتماعيات',month:'nov'},
+      {text:'حصر أسباب الغياب عند الاختبارات التكوينية - مارس',resp:'المرشدات الاجتماعيات',month:'mar'},
+      {text:'سن قوانين الأمن السيبراني وإصدار النشرات التوعوية',resp:'قسم التمكين الرقمي',month:'sep'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'قائدة المشروع',month:'jun'},
+    ]},
+    {name:'منهجنا ارتقاء وإبداع',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة المشروع',resp:'المديرة المساعدة أ/ زهرة الدغاس',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع أ/ وفاء منصور',month:'oct'},
+      {text:'متابعة ملف الخطط التشغيلية وتحليل المناهج الدراسية',resp:'المديرة المساعدة / مسؤولة الملف',month:'jan'},
+      {text:'تكليف المعلمات بتحليل المناهج من قبل المعلمات والطالبات',resp:'رئيسات الأقسام الأكاديمية',month:'may'},
+      {text:'تفعيل الأركان الصفية بالأنشطة الصفية واللاصفية',resp:'الأقسام الأكاديمية',month:'mar'},
+      {text:'تفعيل الأركان في الممرات المدرسية وتصميم البنرات',resp:'الأقسام الأكاديمية',month:'mar'},
+      {text:'تنفيذ المعارض الدائمة ومهرجانات وملتقيات',resp:'الأقسام الأكاديمية',month:'mar'},
+      {text:'التدريب المستمر للأولمبياد الخليجي في الرياضيات',resp:'قسم الرياضيات',month:'may'},
+      {text:'ربط المواد الدراسية ببعضها أفقياً ورأسياً',resp:'الأقسام الأكاديمية',month:'may'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'قطوف',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع قطوف',resp:'المديرة المساعدة أ/ زهرة الدغاس',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع أ/ أمينة الصايغ',month:'oct'},
+      {text:'استقبال الطالبات بداية كل فصل دراسي',resp:'المرشدات الاجتماعيات',month:'sep'},
+      {text:'تنظيم حفل المتفوقات لجميع المستويات الدراسية',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'mar'},
+      {text:'تكريم الطالبات الحاصلات على مراكز متقدمة في الامتحانات الوطنية',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'may'},
+      {text:'وضع معايير عامة لتحفيز الطالبات المواظبات والمشاركات',resp:'الهيئتين الإدارية والتعليمية',month:'may'},
+      {text:'لوحة التفوق حسب المعدل التراكمي لجميع الطالبات',resp:'جميع الأقسام الإدارية والأكاديمية',month:'may'},
+      {text:'تكريم الطالبات المشاركات في تفعيل الأدوات الرقمية',resp:'جميع الأقسام',month:'may'},
+      {text:'مبادرة نسمو للعلا - تحفيز الطالبات لبرنامج ولي العهد',resp:'مكتب الإرشاد الأكاديمي والتوجيه المهني',month:'feb'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'المعلمة الرقمية',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع المعلمة الرقمية',resp:'المديرة المساعدة أ/سامية سلمان',month:'sep'},
+      {text:'حصر الاحتياجات التدريبية للهيئتين الإدارية والتعليمية',resp:'قائدة اللجنة أ/دلال عبدالحسين',month:'sep'},
+      {text:'ورشة عمل حول مواقع الاختبارات الافتراضية للعلوم والرياضيات',resp:'اختصاصية التمكين الرقمي',month:'sep'},
+      {text:'ورشة عمل بعنوان AI Napkin لإنشاء الخرائط الذهنية',resp:'اختصاصية التمكين الرقمي',month:'oct'},
+      {text:'ورشة عمل Microsoft Innovative Educator',resp:'اختصاصية التمكين الرقمي',month:'feb'},
+      {text:'ورشة عمل حول البوابة التعليمية',resp:'اختصاصية التمكين الرقمي',month:'mar'},
+      {text:'إعداد إحصائية حصر ممارسات دمج التقنية في التعليم',resp:'اختصاصية تكنولوجيا التعليم',month:'apr'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'التقويم الفعال',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع التقويم الفعال',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة تنفيذية للمشروع',resp:'رئيسة المشروع',month:'oct'},
+      {text:'اعتماد قرار تشكيل لجنة تقييم خطط الدروس',resp:'المديرة المساعدة',month:'sep'},
+      {text:'الالتزام برفع خطط الدروس حسب الجدولة',resp:'أ/ فاطمة بحر',month:'dec'},
+      {text:'اعتماد قرار تشكيل لجنة الزيارات الصفية',resp:'المديرة المساعدة',month:'sep'},
+      {text:'تنفيذ الزيارات الصفية وإعطاء التغذية الراجعة - يناير',resp:'فريق الزيارات الصفية',month:'jan'},
+      {text:'تنفيذ الزيارات الصفية وإعطاء التغذية الراجعة - مايو',resp:'فريق الزيارات الصفية',month:'may'},
+      {text:'حصر أساليب التقويم الفعالة المعتمدة بكل قسم',resp:'الأقسام الأكاديمية',month:'dec'},
+      {text:'حصر أنشطة التمايز بكل قسم وآلية تنفيذها',resp:'الأقسام الأكاديمية',month:'apr'},
+      {text:'تنمية مهارات التفكير العليا',resp:'الأقسام الأكاديمية',month:'apr'},
+      {text:'تنفيذ الخطط العلاجية لدعم جميع فئات التعلم',resp:'جميع الأقسام',month:'jan'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'التقويم في سبيل التغيير',initiatives:[
+      {text:'إصدار قرار تشكيل فريق التقويم في سبيل التغيير',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة التخطيط الاستراتيجي',resp:'المديرة المساعدة',month:'jun'},
+      {text:'تقييم الخطة التنفيذية للعام الدراسي السابق',resp:'فريق تقييم الخطة',month:'sep'},
+      {text:'إعداد الخطة الاستراتيجية للعام الدراسي الحالي',resp:'عضوات اللجنة',month:'oct'},
+      {text:'مراجعة فريق القيادة للخطة بصورة دورية',resp:'عضوات اللجنة',month:'nov'},
+      {text:'تحليل SWOT للمدرسة',resp:'إدارة المدرسة / جميع الأقسام',month:'may'},
+      {text:'اجتماع أسبوعي لفريق التحسين والتطوير',resp:'القيادة العليا والوسطى',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة نظام إدارة الأداء الوظيفي (أداء)',resp:'المديرة المساعدة',month:'sep'},
+      {text:'عقد الجلسة الأولى - التخطيط (أداء)',resp:'إدارة المدرسة / جميع الأقسام',month:'sep'},
+      {text:'عقد الجلسة الثانية - التقييم الأولى (أداء)',resp:'إدارة المدرسة / جميع الأقسام',month:'jan'},
+      {text:'عقد الجلسة الثالثة - التقييم النهائي (أداء)',resp:'إدارة المدرسة / جميع الأقسام',month:'jun'},
+      {text:'مبادرة طالبتي مرآتي للتقييم الذاتي',resp:'معلمات الشعب الدراسية',month:'may'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'موارد مستثمرة',initiatives:[
+      {text:'إصدار قرار تشكيل فريق متابعة مشروع موارد مستثمرة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة الصحة والسلامة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'تنفيذ تجربة الإخلاء حسب موعد إدارة الدفاع المدني',resp:'الهيئتين الإدارية والتعليمية والطالبات',month:'oct'},
+      {text:'اعتماد قرار تشكيل الكنترول الداخلي للامتحانات',resp:'المديرة المساعدة',month:'sep'},
+      {text:'الإشراف على تجهيز الاختبارات التكوينية والمهام - يناير',resp:'قائدة اللجنة / عضوات اللجنة',month:'jan'},
+      {text:'الإشراف على تجهيز الاختبارات التكوينية والمهام - يونيو',resp:'قائدة اللجنة / عضوات اللجنة',month:'jun'},
+      {text:'اعتماد قرار تشكيل لجنة التدقيق الداخلي',resp:'المديرة المساعدة',month:'sep'},
+      {text:'عملية الأرشفة والتدقيق على ملفات الطالبات',resp:'معلمات الشعب الدراسية',month:'may'},
+      {text:'حصر مرافق ومقتنيات التمكين الرقمي',resp:'اختصاصية التمكين الرقمي',month:'jun'},
+      {text:'متابعة المقصف المدرسي والتأكد من سلامة الأغذية',resp:'رئيسة الخدمات الإدارية والمالية',month:'jun'},
+      {text:'حصر المرافق المدرسية ومقتنياتها',resp:'مكتب الخدمات الإدارية والمالية',month:'may'},
+      {text:'تنظيم حجوزات المرافق ومتابعة الصيانة',resp:'رئيسة الخدمات الإدارية والمالية',month:'oct'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'أكاديمية جدحفص للتدريب والإنماء',initiatives:[
+      {text:'إصدار قرار تشكيل فريق أكاديمية جدحفص [1]',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة تنفيذية وحصر الاحتياجات التدريبية',resp:'رئيسة المشروع أ/ سامية سلمان',month:'sep'},
+      {text:'ورشة "كوادر متميزة" - مجال التعليم والتعلم',resp:'قائدة اللجنة',month:'mar'},
+      {text:'توظيف أدوات التمكين الرقمي - AI Invideo وCanva',resp:'اختصاصية التمكين الرقمي',month:'mar'},
+      {text:'حصر الاحتياجات التدريبية للمعلمات المستجدات',resp:'فريق أكاديمية جدحفص',month:'sep'},
+      {text:'تنظيم حزمة إجراءات لرفع كفاءة المعلمات المستجدات',resp:'جميع الأقسام الأكاديمية / المعلمات الأوليات',month:'may'},
+      {text:'نشر الممارسات المتميزة داخل المدرسة أسبوعياً',resp:'فريق أكاديمية جدحفص',month:'jun'},
+      {text:'قياس أثر مبادرات رفع الكفاءة على أداء المعلمات',resp:'فريق أكاديمية جدحفص',month:'jun'},
+      {text:'تنفيذ ورش "حتى تغيروا ما بأنفسهم"',resp:'فريق أكاديمية جدحفص',month:'dec'},
+      {text:'حصر أولياء الأمور من ذوي الخبرة لتقديم الورش',resp:'فريق أكاديمية جدحفص',month:'oct'},
+      {text:'توظيف نتائج الحصر في تقديم ورش لجميع منتسبي المدرسة',resp:'رئيسة المشروع',month:'jun'},
+      {text:'إعداد التقارير الختامية للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+    {name:'جدحفص أسرة واحدة',initiatives:[
+      {text:'إصدار قرار تشكيل فريق مشروع جدحفص أسرة واحدة',resp:'المديرة المساعدة أ/زهرة الدغاس',month:'sep'},
+      {text:'اعتماد قرار تشكيل لجنة العلاقات العامة',resp:'المديرة المساعدة',month:'sep'},
+      {text:'استقبال المعلمات في بداية العام الدراسي',resp:'إدارة المدرسة',month:'sep'},
+      {text:'احتفال يوم المعلم مع توزيع هدايا عينية',resp:'جميع الأقسام',month:'oct'},
+      {text:'احتفال العيد الوطني المجيد مع منتسبي المدرسة',resp:'جميع الأقسام',month:'dec'},
+      {text:'الاحتفال بيوم المرأة البحرينية',resp:'جميع الأقسام',month:'dec'},
+      {text:'الاحتفال بقدوم شهر رمضان',resp:'الأقسام المدرسة',month:'feb'},
+      {text:'اعتماد قرار تشكيل لجنة البحوث الإجرائية',resp:'المديرة المساعدة',month:'sep'},
+      {text:'تكليف المعلمات بإعداد بحوث إجرائية',resp:'إدارة المدرسة',month:'may'},
+      {text:'اعتماد قرار تشكيل اللجنة الإعلامية jsgs.media',resp:'المديرة المساعدة',month:'sep'},
+      {text:'إعداد خطة اللجنة الإعلامية ومتابعة تنفيذها',resp:'قائدة اللجنة',month:'oct'},
+      {text:'الاحتفال بيوم الأسرة',resp:'جميع الأقسام',month:'mar'},
+      {text:'الحفل الختامي للعام الدراسي',resp:'إدارة المدرسة',month:'jun'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع أ/صفاء المدني',month:'jun'},
+    ]},
+    {name:'سوياً لبناء المجتمع',initiatives:[
+      {text:'إصدار قرار تشكيل فريق مشروع سوياً لبناء المجتمع',resp:'المديرة المساعدة',month:'sep'},
+      {text:'التواصل مع مؤسسات المجتمع المحلي لخدمة العملية التعليمية',resp:'رئيسة المشروع',month:'jun'},
+      {text:'تنظيم التوأمة مع المدارس الثانوية',resp:'المديرة المساعدة أ/سامية سلمان',month:'may'},
+      {text:'تنظيم زيارات المدارس للمدرسة أو بالعكس',resp:'رئيسة المشروع',month:'may'},
+      {text:'تنظيم ورش عمل وجلسات تدريب للمدارس الثانوية',resp:'رئيسة المشروع',month:'may'},
+      {text:'اعتماد جداول الساعات المكتبية لكل معلمة',resp:'الإرشاد الأكاديمي / رئيسات الأقسام',month:'sep'},
+      {text:'تنفيذ اليوم المفتوح مع أولياء الأمور - ديسمبر',resp:'إدارة المدرسة / جميع الأقسام',month:'dec'},
+      {text:'تنفيذ اليوم المفتوح مع أولياء الأمور - أبريل',resp:'إدارة المدرسة / جميع الأقسام',month:'apr'},
+      {text:'إعادة تشكيل مجلس الآباء',resp:'إدارة المدرسة / أعضاء المجلس',month:'sep'},
+      {text:'توجيه دعوات لأعضاء مجلس الآباء في الاحتفالات',resp:'رئيسة المشروع',month:'jun'},
+      {text:'مبادرة الاتصال الإيجابي مع أولياء الأمور',resp:'الهيئتين الإدارية والتعليمية',month:'jan'},
+      {text:'إعداد التقرير الختامي للمشروع',resp:'رئيسة المشروع',month:'jun'},
+    ]},
+  ]};
+}
+
+// ============ STORAGE HELPERS ============
+function lsGet(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch(e){return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function saveChecked(){lsSet(LS_CHECKED,checked);showSaveIndicator();}
+function savePlan(){lsSet(LS_PLAN,planData);}
+function savePasswords(){lsSet(LS_FOLLOWPWDS,followPwds);lsSet(LS_ADMINPWD,adminPwd);}
+function showSaveIndicator(){
+  const el=document.getElementById('saveInd');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ============ INIT ============
+function init(){
+  adminPwd=lsGet(LS_ADMINPWD,'admin123');
+  followPwds=lsGet(LS_FOLLOWPWDS,['follow123']);
+  checked=lsGet(LS_CHECKED,{});
+  const saved=lsGet(LS_PLAN,null);
+  if(saved&&saved.projects&&saved.projects.length){
+    planData=saved;
+  } else {
+    planData=buildPlan();
+    savePlan();
+  }
+  populatePrintDropdown();
+  populateFilters();
+  renderPwdList();
+  renderAll();
+}
+
+function renderAll(){
+  renderMain();
+  updateStats();
+}
+
+// ============ STATS ============
+function updateStats(){
+  if(!planData) return;
+  let total=0,done=0,thisM=0;
+  planData.projects.forEach((p,pi)=>p.initiatives.forEach((i,ii)=>{
+    total++;if(chkState(pi,ii))done++;
+    if(i.month===CURRENT_MONTH) thisM++;
+  }));
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-pct').textContent=total?Math.round(done/total*100)+'%':'0%';
+  document.getElementById('s-projs').textContent=planData.projects.length;
+  document.getElementById('s-thismonth').textContent=thisM;
+}
+
+function chkState(pi,ii){return !!checked[pi+'_'+ii];}
+function setChk(pi,ii,val){checked[pi+'_'+ii]=val;}
+function countTotal(){return planData?planData.projects.reduce((s,p)=>s+p.initiatives.length,0):0;}
+
+// ============ MAIN PAGE ============
+function renderMain(){
+  if(!planData){document.getElementById('mainGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:2.5rem">📋</div><div style="margin-top:.5rem">انتقل للإدارة لتحميل الخطة</div></div>';return;}
+  const grid=document.getElementById('mainGrid');
+  grid.innerHTML='';
+  MONTHS.forEach(m=>{
+    const groups=[];
+    planData.projects.forEach((proj,pi)=>{
+      const inits=proj.initiatives.filter(i=>i.month===m.id);
+      if(inits.length) groups.push({proj,pi,inits});
+    });
+    const total=groups.reduce((s,g)=>s+g.inits.length,0);
+    const done=groups.reduce((s,g)=>s+g.inits.filter(i=>chkState(g.pi,g.proj.initiatives.indexOf(i))).length,0);
+    const pct=total?Math.round(done/total*100):0;
+    const mid='m_'+m.id;
+    let bodyHtml='';
+    groups.forEach(({proj,pi,inits})=>{
+      bodyHtml+=`<div class="psec"><div class="ptitle">📁 ${proj.name}</div>`;
+      inits.forEach(init=>{
+        const rii=proj.initiatives.indexOf(init);
+        const d=chkState(pi,rii);
+        bodyHtml+=`<div class="iitem">
+          <div class="istat ${d?'done-dot':'pending-dot'}">${d?'✓':''}</div>
+          <div><div class="itext${d?' done':''}">${init.text}</div>${init.resp?`<div class="iresponsible">👤 ${init.resp}</div>`:''}</div>
+        </div>`;
+      });
+      bodyHtml+='</div>';
+    });
+    const card=document.createElement('div');
+    card.className='mcard';
+    card.innerHTML=`<div class="mhead" onclick="toggleM('${mid}')">
+      <span class="mname">${m.name}</span>
+      <span class="mbadge${done===total&&total>0?' full':''}">${done}/${total}</span>
+    </div>
+    <div class="mprog"><div class="mprogf" style="width:${pct}%"></div></div>
+    <div class="mbody${openMonths[mid]?' open':''}" id="${mid}">${total?bodyHtml:'<div style="padding:.5rem;font-size:.78rem;color:var(--muted)">لا توجد إجراءات لهذا الشهر</div>'}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleM(id){
+  openMonths[id]=!openMonths[id];
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle('open',!!openMonths[id]);
+}
+
+// ============ FOLLOW PAGE ============
+function renderFollow(){
+  if(!planData) return;
+  const pf=document.getElementById('flt-proj').value;
+  const mf=document.getElementById('flt-month').value;
+  const sf=document.getElementById('flt-status').value;
+  const grid=document.getElementById('followGrid');
+  grid.innerHTML='';
+  MONTHS.forEach(m=>{
+    if(mf&&mf!==m.id) return;
+    const groups=[];
+    planData.projects.forEach((proj,pi)=>{
+      if(pf&&pi!==parseInt(pf)) return;
+      const inits=proj.initiatives.filter(init=>{
+        if(init.month!==m.id) return false;
+        const rii=proj.initiatives.indexOf(init);
+        const d=chkState(pi,rii);
+        if(sf==='done'&&!d) return false;
+        if(sf==='pending'&&d) return false;
+        return true;
+      });
+      if(inits.length) groups.push({proj,pi,inits});
+    });
+    if(!groups.length) return;
+    const sec=document.createElement('div');
+    sec.className='sec-card';
+    let html=`<h3>📅 ${m.name}</h3>`;
+    groups.forEach(({proj,pi,inits})=>{
+      html+=`<div class="psec"><div class="ptitle">📁 ${proj.name}</div>`;
+      inits.forEach(init=>{
+        const rii=proj.initiatives.indexOf(init);
+        const d=chkState(pi,rii);
+        const key=`f_${pi}_${rii}`;
+        html+=`<div class="iitem">
+          <input type="checkbox" class="icb" id="${key}" data-pi="${pi}" data-ii="${rii}" ${d?'checked':''} onchange="toggleChk(this)">
+          <label for="${key}"><div class="itext${d?' done':''}">${init.text}</div>${init.resp?`<div class="iresponsible">👤 ${init.resp}</div>`:''}</label>
+        </div>`;
+      });
+      html+='</div>';
+    });
+    sec.innerHTML=html;
+    grid.appendChild(sec);
+  });
+  if(!grid.children.length) grid.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem">لا توجد نتائج للفلتر المحدد</div>';
+}
+
+// ============ ADMIN ACTIONS ============
+function renderAdminActions(){
+  if(!planData) return;
+  const pf=document.getElementById('aflt-proj').value;
+  const mf=document.getElementById('aflt-month').value;
+  const grid=document.getElementById('adminActionsGrid');
+  grid.innerHTML='';
+  MONTHS.forEach(m=>{
+    if(mf&&mf!==m.id) return;
+    const groups=[];
+    planData.projects.forEach((proj,pi)=>{
+      if(pf&&pi!==parseInt(pf)) return;
+      const inits=proj.initiatives.filter(i=>i.month===m.id);
+      if(inits.length) groups.push({proj,pi,inits});
+    });
+    if(!groups.length) return;
+    const sec=document.createElement('div');
+    sec.className='sec-card';
+    let html=`<h3>📅 ${m.name}</h3>`;
+    groups.forEach(({proj,pi,inits})=>{
+      html+=`<div class="psec"><div class="ptitle">📁 ${proj.name}</div>`;
+      inits.forEach(init=>{
+        const rii=proj.initiatives.indexOf(init);
+        const d=chkState(pi,rii);
+        const key=`a_${pi}_${rii}`;
+        html+=`<div class="iitem">
+          <input type="checkbox" class="icb" id="${key}" data-pi="${pi}" data-ii="${rii}" ${d?'checked':''} onchange="toggleChk(this)">
+          <label for="${key}"><div class="itext${d?' done':''}">${init.text}</div>${init.resp?`<div class="iresponsible">👤 ${init.resp}</div>`:''}</label>
+        </div>`;
+      });
+      html+='</div>';
+    });
+    sec.innerHTML=html;
+    grid.appendChild(sec);
+  });
+  if(!grid.children.length) grid.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.85rem">لا توجد إجراءات للفلتر المحدد</div>';
+}
+
+function toggleChk(cb){
+  const pi=parseInt(cb.dataset.pi),ii=parseInt(cb.dataset.ii);
+  setChk(pi,ii,cb.checked);
+  const lbl=cb.nextElementSibling;
+  if(lbl){const t=lbl.querySelector('.itext');if(t)t.classList.toggle('done',cb.checked);}
+  saveChecked();
+  updateStats();
+  renderMain();
+}
+
+// ============ FILTERS ============
+function populateFilters(){
+  if(!planData) return;
+  const opts=planData.projects.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('');
+  const mopts=MONTHS.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  ['flt-proj','aflt-proj'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<option value="">كل المشاريع</option>'+opts;});
+  ['flt-month','aflt-month'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<option value="">كل الأشهر</option>'+mopts;});
+}
+
+// ============ REPORTS ============
+function renderReports(){
+  if(!planData) return;
+  let total=0,done=0,thisM=0,thisMDone=0;
+  planData.projects.forEach((p,pi)=>p.initiatives.forEach((i,ii)=>{
+    total++;if(chkState(pi,ii)){done++;if(i.month===CURRENT_MONTH)thisMDone++;}
+    if(i.month===CURRENT_MONTH)thisM++;
+  }));
+  const remaining=total-done;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi"><div class="kpi-n">${total}</div><div class="kpi-l">إجمالي الإجراءات</div></div>
+    <div class="kpi"><div class="kpi-n" style="color:#198754">${done}</div><div class="kpi-l">تم التنفيذ</div></div>
+    <div class="kpi"><div class="kpi-n" style="color:var(--danger)">${remaining}</div><div class="kpi-l">لم يتم بعد</div></div>
+    <div class="kpi"><div class="kpi-n">${pct}%</div><div class="kpi-l">نسبة الإنجاز الكلية</div></div>
+    <div class="kpi"><div class="kpi-n" style="color:var(--acc)">${thisM}</div><div class="kpi-l">إجراءات الشهر الحالي</div></div>
+    <div class="kpi"><div class="kpi-n" style="color:#0d6efd">${thisMDone}</div><div class="kpi-l">منجزة هذا الشهر</div></div>`;
+  let mHtml='';
+  MONTHS.forEach(m=>{
+    let t=0,d=0;
+    planData.projects.forEach((proj,pi)=>proj.initiatives.filter(i=>i.month===m.id).forEach(i=>{
+      const rii=proj.initiatives.indexOf(i);t++;if(chkState(pi,rii))d++;
+    }));
+    if(!t) return;
+    const p=Math.round(d/t*100);
+    const color=p>=80?'#52b788':p>=50?'#f77f00':'#e63946';
+    mHtml+=`<div class="rprog-row">
+      <div class="rprog-label" style="width:65px">${m.name}</div>
+      <div class="rprog-bar"><div class="rprog-fill" style="width:${p}%;background:${color}"></div></div>
+      <div class="rprog-pct">${p}%</div>
+      <div class="rprog-count">${d}/${t}</div>
+    </div>`;
+  });
+  document.getElementById('rep-monthly').innerHTML=mHtml;
+  let pHtml='';
+  planData.projects.forEach((proj,pi)=>{
+    let t=0,d=0;
+    proj.initiatives.forEach((_,ii)=>{t++;if(chkState(pi,ii))d++;});
+    const p=Math.round(d/t*100);
+    const color=p>=80?'#52b788':p>=50?'#f77f00':'#e63946';
+    pHtml+=`<div class="rprog-row">
+      <div class="rprog-label" style="width:150px;font-size:.7rem">${proj.name.substring(0,22)}${proj.name.length>22?'…':''}</div>
+      <div class="rprog-bar"><div class="rprog-fill" style="width:${p}%;background:${color}"></div></div>
+      <div class="rprog-pct">${p}%</div>
+      <div class="rprog-count">${d}/${t}</div>
+    </div>`;
+  });
+  document.getElementById('rep-projects').innerHTML=pHtml;
+  const insights=[];
+  if(pct<30) insights.push({type:'warn',txt:'نسبة الإنجاز الكلية أقل من 30% - يُنصح بمراجعة خطة التنفيذ وتحديد العوائق'});
+  else if(pct>=80) insights.push({type:'tip',txt:'ممتاز! نسبة الإنجاز تتجاوز 80% - استمروا في هذا الزخم الإيجابي'});
+  else insights.push({type:'info',txt:'التقدم جيد، حافظوا على وتيرة التنفيذ للوصول للأهداف في الوقت المحدد'});
+  let minPct=101,minMonth='';
+  MONTHS.forEach(m=>{
+    let t=0,d=0;
+    planData.projects.forEach((proj,pi)=>proj.initiatives.filter(i=>i.month===m.id).forEach(i=>{
+      const rii=proj.initiatives.indexOf(i);t++;if(chkState(pi,rii))d++;
+    }));
+    if(t>0){const p=Math.round(d/t*100);if(p<minPct){minPct=p;minMonth=m.name;}}
+  });
+  if(minMonth) insights.push({type:'warn',txt:`شهر ${minMonth} هو الأقل إنجازاً (${minPct}%) - يُنصح بالتركيز على إجراءاته`});
+  const lowProjs=planData.projects.filter((proj,pi)=>{
+    let t=0,d=0;proj.initiatives.forEach((_,ii)=>{t++;if(chkState(pi,ii))d++;});
+    return t>0&&Math.round(d/t*100)<20;
+  }).map(p=>p.name);
+  if(lowProjs.length) insights.push({type:'warn',txt:`مشاريع بحاجة لمتابعة عاجلة (أقل من 20%): ${lowProjs.slice(0,3).join(' - ')}`});
+  insights.push({type:'info',txt:`الإجراءات المتبقية: ${remaining} إجراء - التركيز على إجراءات الأشهر القادمة يضمن الإنجاز في الوقت المحدد`});
+  document.getElementById('rep-insights').innerHTML=insights.map(i=>`<div class="insight ${i.type}"><span>${i.type==='tip'?'✅':i.type==='warn'?'⚠️':'ℹ️'}</span><span>${i.txt}</span></div>`).join('');
+}
+
+// ============ NAVIGATION ============
+function goPage(page){
+  ['main','follow','admin'].forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('active',p===page);
+    document.getElementById('btn-'+p).classList.toggle('active',p===page);
+  });
+  if(page==='follow') renderFollow();
+}
+
+// ============ LOGIN ============
+function openLogin(target){
+  loginTarget=target;
+  document.getElementById('loginTitle').textContent=target==='admin'?'🔐 دخول لوحة الإدارة':'🔐 دخول صفحة المتابعة';
+  document.getElementById('loginPwd').value='';
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('loginModal').classList.add('show');
+  setTimeout(()=>document.getElementById('loginPwd').focus(),100);
+}
+
+function doLogin(){
+  const v=document.getElementById('loginPwd').value.trim();
+  const valid=loginTarget==='admin'?v===adminPwd:(v===adminPwd||followPwds.includes(v));
+  if(valid){
+    closeModal('loginModal');
+    if(loginTarget==='admin'){isAdmin=true;goPage('admin');openAdminTab('actions');}
+    else{isFollow=true;goPage('follow');}
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('loginPwd').select();
+  }
+}
+
+function logoutAdmin(){isAdmin=false;goPage('main');}
+function logoutFollow(){isFollow=false;goPage('main');}
+
+// ============ ADMIN TABS ============
+function openAdminTab(tab){
+  ['actions','reports','tools','passwords'].forEach(t=>{
+    const el=document.getElementById('asec-'+t);
+    if(el)el.style.display=t===tab?'block':'none';
+    const btn=document.getElementById('atab-'+t);
+    if(btn)btn.className=t===tab?'btn btn-p':'btn btn-gray';
+  });
+  if(tab==='actions')renderAdminActions();
+  if(tab==='reports')renderReports();
+}
+
+function openAdminSub(sub){
+  document.getElementById('asub-upload').style.display=sub==='upload'?'block':'none';
+}
+
+// ============ MODALS ============
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)closeModal(this.id);}));
+
+// ============ PASSWORDS ============
+function renderPwdList(){
+  document.getElementById('pwdList').innerHTML=followPwds.map((p,i)=>
+    `<li class="pwditem"><span>${p}</span><button class="pwddel" onclick="delFollowPwd(${i})">✕</button></li>`
+  ).join('');
+}
+function addFollowPwd(){
+  const p=document.getElementById('newPwd').value.trim();
+  if(!p)return;
+  followPwds.push(p);
+  document.getElementById('newPwdUser').value='';
+  document.getElementById('newPwd').value='';
+  savePasswords();
+  renderPwdList();
+}
+function delFollowPwd(i){followPwds.splice(i,1);savePasswords();renderPwdList();}
+
+// ============ PRINT ============
+function populatePrintDropdown(){
+  if(!planData)return;
+  const opts=planData.projects.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('');
+  document.getElementById('printSel').innerHTML='<option value="">-- اختر مشروعاً --</option>'+opts;
+}
+function openPrintDialog(){document.getElementById('printModal').classList.add('show');}
+function doPrint(){
+  const v=document.getElementById('printSel').value;
+  if(v===''){alert('اختر مشروعاً أولاً');return;}
+  const pi=parseInt(v);const proj=planData.projects[pi];
+  let html=`<html dir="rtl"><head><meta charset="UTF-8"><title>${proj.name}</title>
+  <style>body{font-family:'Segoe UI',Tahoma,sans-serif;padding:1.5cm 2cm;direction:rtl;color:#1a202c}
+  h1{color:#1b4332;font-size:1.3rem;border-bottom:2px solid #1b4332;padding-bottom:.5rem;margin-bottom:.3rem}
+  .meta{font-size:.75rem;color:#6c757d;margin-bottom:1.2rem}
+  h2{color:#2d6a4f;font-size:.95rem;margin:1.2rem 0 .4rem;background:#f0faf5;padding:.3rem .6rem;border-right:3px solid #52b788}
+  table{width:100%;border-collapse:collapse;margin-bottom:.5rem}
+  th{background:#1b4332;color:#fff;padding:.35rem .5rem;font-size:.75rem;text-align:right}
+  td{border:1px solid #dee2e6;padding:.35rem .5rem;font-size:.72rem;vertical-align:top}
+  tr:nth-child(even){background:#f8f9fa}
+  .done{background:#d8f3dc!important}.pending{background:#fff3cd!important}
+  @media print{body{padding:1cm}}</style></head><body>
+  <h1>📋 ${proj.name}</h1>
+  <div class="meta">مدرسة جدحفص الثانوية للبنات &nbsp;|&nbsp; الخطة التنفيذية ${new Date().getFullYear()} &nbsp;|&nbsp; تاريخ الطباعة: ${new Date().toLocaleDateString('ar-BH')}</div>`;
+  MONTHS.forEach(m=>{
+    const inits=proj.initiatives.filter(i=>i.month===m.id);
+    if(!inits.length)return;
+    const done=inits.filter(i=>chkState(pi,proj.initiatives.indexOf(i))).length;
+    html+=`<h2>📅 ${m.name} &nbsp;<span style="font-size:.8rem;font-weight:400">(${done}/${inits.length} منجز)</span></h2>
+    <table><tr><th width="28">#</th><th>الإجراء</th><th>المنفذون</th><th width="60">الحالة</th><th width="100">ملاحظات</th></tr>`;
+    inits.forEach((init,n)=>{
+      const rii=proj.initiatives.indexOf(init);
+      const d=chkState(pi,rii);
+      html+=`<tr class="${d?'done':'pending'}"><td style="text-align:center">${n+1}</td><td>${init.text}</td><td style="color:#555">${init.resp||'-'}</td><td style="text-align:center">${d?'✅ تم':'⬜ لم يتم'}</td><td></td></tr>`;
+    });
+    html+='</table>';
+  });
+  html+=`<footer style="margin-top:1.5rem;font-size:.7rem;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:.5rem">مدرسة جدحفص الثانوية للبنات - الخطة التنفيذية ${new Date().getFullYear()}</footer></body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),500);
+  closeModal('printModal');
+}
+
+// ============ FILE UPLOAD ============
+function loadBuiltinPlan(){
+  planData=buildPlan();savePlan();
+  checked={};saveChecked();
+  populatePrintDropdown();populateFilters();
+  renderAll();
+  document.getElementById('uploadStatus').textContent=`✅ تم تحميل الخطة! ${countTotal()} إجراء في ${planData.projects.length} مشروع`;
+}
+function loadPlanFile(input){
+  const file=input.files[0];if(!file)return;
+  const status=document.getElementById('uploadStatus');
+  status.textContent='⏳ جاري تحليل الملف...';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const parsed=parsePlanText(e.target.result);
+    if(parsed&&parsed.projects.length){
+      planData=parsed;checked={};
+      savePlan();saveChecked();
+      populatePrintDropdown();populateFilters();renderAll();
+      status.textContent=`✅ تم تحميل الخطة! ${countTotal()} إجراء في ${planData.projects.length} مشروع`;
+    } else {
+      loadBuiltinPlan();
+      status.textContent='⚠️ تم تحميل الخطة المضمنة (لم يُتعرف على تنسيق الملف)';
+    }
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function parsePlanText(text){
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>4);
+  const monthMap={'سبتمبر':'sep','أكتوبر':'oct','نوفمبر':'nov','ديسمبر':'dec','يناير':'jan','فبراير':'feb','مارس':'mar','أبريل':'apr','مايو':'may','يونيو':'jun'};
+  const projects=[];let curr=null;
+  lines.forEach(line=>{
+    if(/مشروع/.test(line)&&line.length<100){
+      const name=line.replace(/^إصدار.*مشروع\s*/,'').replace(/\[.*\]/g,'').trim();
+      if(name.length>3){curr={name:name.substring(0,60),initiatives:[]};projects.push(curr);}
+    }
+    if(curr){
+      let month=null;
+      Object.entries(monthMap).forEach(([ar,id])=>{if(line.includes(ar))month=id;});
+      if(month&&line.length>10&&line.length<200)curr.initiatives.push({text:line.substring(0,150),resp:'',month});
+    }
+  });
+  return projects.length?{projects}:null;
+}
+
+// ============ RESET ============
+function resetAll(){
+  if(!confirm('هل أنت متأكد من إعادة تعيين جميع الإجراءات المنجزة؟\nلا يمكن التراجع عن هذه العملية.'))return;
+  checked={};saveChecked();renderAll();alert('تم إعادة التعيين بنجاح.');
+}
+
+// ============ EXCEL ============
+function exportExcel(){
+  if(!planData){alert('يرجى تحميل الخطة أولاً');return;}
+  const wb=XLSX.utils.book_new();
+  function cellAddr(c,r){const col=c<26?String.fromCharCode(65+c):'A'+String.fromCharCode(65+c-26);return col+(r+1);}
+  const COLOR={headerBg:'1B4332',headerFg:'FFFFFF',monthBg:'2D6A4F',monthFg:'FFFFFF',doneBg:'D8F3DC',doneFg:'1B4332',pendBg:'FFF3CD',pendFg:'7D5A00',titlebg:'F0FAF5',titleFg:'1B4332',border:'AAAAAA',sumBg:'E7F3FF',sumFg:'0A3D7A',grayBg:'F8F9FA'};
+  const border={top:{style:'thin',color:{rgb:COLOR.border}},bottom:{style:'thin',color:{rgb:COLOR.border}},left:{style:'thin',color:{rgb:COLOR.border}},right:{style:'thin',color:{rgb:COLOR.border}}};
+  function hStyle(bg,fg,bold,sz,wrap,halign){return{fill:{fgColor:{rgb:bg}},font:{bold:!!bold,color:{rgb:fg||'000000'},sz:sz||10,name:'Calibri'},alignment:{horizontal:halign||'right',vertical:'center',wrapText:!!wrap,readingOrder:2},border};}
+  planData.projects.forEach((proj,pi)=>{
+    const ws={};const merges=[];let row=0;
+    ws[cellAddr(0,row)]={t:'s',v:proj.name,s:hStyle(COLOR.headerBg,COLOR.headerFg,true,14,false,'center')};
+    for(let c=1;c<=4;c++)ws[cellAddr(c,row)]={t:'s',v:'',s:hStyle(COLOR.headerBg,COLOR.headerFg)};
+    merges.push({s:{r:row,c:0},e:{r:row,c:4}});row++;
+    const today=new Date().toLocaleDateString('ar-BH');
+    ws[cellAddr(0,row)]={t:'s',v:`تاريخ التصدير: ${today}   |   مدرسة جدحفص الثانوية للبنات`,s:hStyle(COLOR.titlebg,COLOR.titleFg,false,9,false,'center')};
+    for(let c=1;c<=4;c++)ws[cellAddr(c,row)]={t:'s',v:'',s:hStyle(COLOR.titlebg,COLOR.titleFg)};
+    merges.push({s:{r:row,c:0},e:{r:row,c:4}});row++;
+    let ptotal=0,pdone=0;
+    proj.initiatives.forEach((_,ii)=>{ptotal++;if(chkState(pi,ii))pdone++;});
+    const ppct=ptotal?Math.round(pdone/ptotal*100):0;
+    ws[cellAddr(0,row)]={t:'s',v:`إجمالي: ${ptotal}   |   تم التنفيذ: ${pdone}   |   المتبقي: ${ptotal-pdone}   |   نسبة الإنجاز: ${ppct}%`,s:hStyle(COLOR.sumBg,COLOR.sumFg,true,10,false,'center')};
+    for(let c=1;c<=4;c++)ws[cellAddr(c,row)]={t:'s',v:'',s:hStyle(COLOR.sumBg,COLOR.sumFg)};
+    merges.push({s:{r:row,c:0},e:{r:row,c:4}});row++;
+    for(let c=0;c<=4;c++)ws[cellAddr(c,row)]={t:'s',v:'',s:{fill:{fgColor:{rgb:'FFFFFF'}}}};row++;
+    MONTHS.forEach(m=>{
+      const inits=proj.initiatives.filter(i=>i.month===m.id);if(!inits.length)return;
+      const mdone=inits.filter(i=>chkState(pi,proj.initiatives.indexOf(i))).length;
+      ws[cellAddr(0,row)]={t:'s',v:`📅  ${m.name}`,s:hStyle(COLOR.monthBg,COLOR.monthFg,true,11)};
+      ws[cellAddr(1,row)]={t:'s',v:'',s:hStyle(COLOR.monthBg,COLOR.monthFg)};
+      ws[cellAddr(2,row)]={t:'s',v:'',s:hStyle(COLOR.monthBg,COLOR.monthFg)};
+      ws[cellAddr(3,row)]={t:'s',v:`${mdone} / ${inits.length} منجز`,s:hStyle(COLOR.monthBg,COLOR.monthFg,true,10,false,'center')};
+      ws[cellAddr(4,row)]={t:'s',v:`${inits.length?Math.round(mdone/inits.length*100):0}%`,s:hStyle(COLOR.monthBg,COLOR.monthFg,true,11,false,'center')};row++;
+      ['#','الإجراء','المنفذون','الحالة','ملاحظات'].forEach((h,c)=>{ws[cellAddr(c,row)]={t:'s',v:h,s:hStyle('D0E8D8','1B4332',true,10,false,'center')};});row++;
+      inits.forEach((init,n)=>{
+        const rii=proj.initiatives.indexOf(init);const done=chkState(pi,rii);
+        const bg=done?COLOR.doneBg:COLOR.pendBg;const fg=done?COLOR.doneFg:COLOR.pendFg;
+        ws[cellAddr(0,row)]={t:'n',v:n+1,s:hStyle(bg,fg,false,10,false,'center')};
+        ws[cellAddr(1,row)]={t:'s',v:init.text,s:hStyle(bg,fg,false,10,true)};
+        ws[cellAddr(2,row)]={t:'s',v:init.resp||'-',s:hStyle(bg,'555555',false,9,true)};
+        ws[cellAddr(3,row)]={t:'s',v:done?'✅ تم التنفيذ':'⬜ لم يتم بعد',s:hStyle(bg,fg,true,10,false,'center')};
+        ws[cellAddr(4,row)]={t:'s',v:'',s:hStyle(COLOR.grayBg,'000000',false,10,true)};row++;
+      });
+      for(let c=0;c<=4;c++)ws[cellAddr(c,row)]={t:'s',v:'',s:{fill:{fgColor:{rgb:'FFFFFF'}},border}};row++;
+    });
+    ws['!ref']=`A1:E${row}`;ws['!merges']=merges;
+    ws['!cols']=[{wch:5},{wch:55},{wch:30},{wch:18},{wch:22}];
+    ws['!rows']=Array.from({length:row},(_,i)=>({hpt:i<4?22:32}));
+    const sn=proj.name.replace(/[/\\?*[\]]/g,'').substring(0,28);
+    XLSX.utils.book_append_sheet(wb,ws,sn||`مشروع ${pi+1}`);
+  });
+  // Summary sheet
+  const wsSum={};const sumMerges=[];let srow=0;
+  wsSum[cellAddr(0,srow)]={t:'s',v:'ملخص الخطة التنفيذية - مدرسة جدحفص الثانوية للبنات',s:hStyle(COLOR.headerBg,COLOR.headerFg,true,13,false,'center')};
+  for(let c=1;c<=5;c++)wsSum[cellAddr(c,srow)]={t:'s',v:'',s:hStyle(COLOR.headerBg,COLOR.headerFg)};
+  sumMerges.push({s:{r:0,c:0},e:{r:0,c:5}});srow++;
+  let gtotal=0,gdone=0;
+  planData.projects.forEach((p,pi)=>p.initiatives.forEach((_,ii)=>{gtotal++;if(chkState(pi,ii))gdone++;}));
+  const gpct=gtotal?Math.round(gdone/gtotal*100):0;
+  wsSum[cellAddr(0,srow)]={t:'s',v:`الإجمالي الكلي: ${gtotal} إجراء   |   منجز: ${gdone}   |   متبقي: ${gtotal-gdone}   |   نسبة الإنجاز: ${gpct}%`,s:hStyle(COLOR.sumBg,COLOR.sumFg,true,11,false,'center')};
+  for(let c=1;c<=5;c++)wsSum[cellAddr(c,srow)]={t:'s',v:'',s:hStyle(COLOR.sumBg,COLOR.sumFg)};
+  sumMerges.push({s:{r:srow,c:0},e:{r:srow,c:5}});srow+=2;
+  wsSum[cellAddr(0,srow)]={t:'s',v:'الإنجاز الشهري',s:hStyle(COLOR.monthBg,COLOR.monthFg,true,11,false,'center')};
+  for(let c=1;c<=5;c++)wsSum[cellAddr(c,srow)]={t:'s',v:'',s:hStyle(COLOR.monthBg,COLOR.monthFg)};
+  sumMerges.push({s:{r:srow,c:0},e:{r:srow,c:5}});srow++;
+  ['الشهر','إجمالي الإجراءات','تم التنفيذ','لم يتم بعد','نسبة الإنجاز','شريط التقدم'].forEach((h,c)=>{wsSum[cellAddr(c,srow)]={t:'s',v:h,s:hStyle('D0E8D8','1B4332',true,10,false,'center')};});srow++;
+  MONTHS.forEach(m=>{
+    let t=0,d=0;
+    planData.projects.forEach((p,pi)=>p.initiatives.filter(i=>i.month===m.id).forEach(i=>{const rii=p.initiatives.indexOf(i);t++;if(chkState(pi,rii))d++;}));
+    if(!t)return;
+    const p=Math.round(d/t*100);
+    const bg=p>=80?COLOR.doneBg:p>=50?'FFF3CD':p>0?'FFE5E5':'F8F9FA';
+    const fg=p>=80?COLOR.doneFg:p>=50?COLOR.pendFg:'C0392B';
+    const bar='█'.repeat(Math.round(p/10))+'░'.repeat(10-Math.round(p/10));
+    wsSum[cellAddr(0,srow)]={t:'s',v:m.name,s:hStyle(bg,fg,true,10,false,'center')};
+    wsSum[cellAddr(1,srow)]={t:'n',v:t,s:hStyle(bg,fg,false,10,false,'center')};
+    wsSum[cellAddr(2,srow)]={t:'n',v:d,s:hStyle(COLOR.doneBg,COLOR.doneFg,true,10,false,'center')};
+    wsSum[cellAddr(3,srow)]={t:'n',v:t-d,s:hStyle('FFE5E5','C0392B',true,10,false,'center')};
+    wsSum[cellAddr(4,srow)]={t:'s',v:p+'%',s:hStyle(bg,fg,true,11,false,'center')};
+    wsSum[cellAddr(5,srow)]={t:'s',v:bar,s:hStyle(bg,p>=80?COLOR.doneFg:COLOR.pendFg,false,8,false,'center')};srow++;
+  });
+  srow++;
+  wsSum[cellAddr(0,srow)]={t:'s',v:'إنجاز المشاريع',s:hStyle(COLOR.monthBg,COLOR.monthFg,true,11,false,'center')};
+  for(let c=1;c<=5;c++)wsSum[cellAddr(c,srow)]={t:'s',v:'',s:hStyle(COLOR.monthBg,COLOR.monthFg)};
+  sumMerges.push({s:{r:srow,c:0},e:{r:srow,c:5}});srow++;
+  ['المشروع','إجمالي الإجراءات','تم التنفيذ','لم يتم بعد','نسبة الإنجاز','الحالة'].forEach((h,c)=>{wsSum[cellAddr(c,srow)]={t:'s',v:h,s:hStyle('D0E8D8','1B4332',true,10,false,'center')};});srow++;
+  planData.projects.forEach((proj,pi)=>{
+    let t=0,d=0;proj.initiatives.forEach((_,ii)=>{t++;if(chkState(pi,ii))d++;});
+    const p=Math.round(d/t*100);
+    const bg=p>=80?COLOR.doneBg:p>=50?'FFF3CD':'FFE5E5';
+    const fg=p>=80?COLOR.doneFg:p>=50?COLOR.pendFg:'C0392B';
+    const status=p===100?'✅ مكتمل':p>=80?'🟢 متقدم':p>=50?'🟡 جيد':p>0?'🟠 بحاجة متابعة':'🔴 لم يبدأ';
+    wsSum[cellAddr(0,srow)]={t:'s',v:proj.name,s:hStyle(bg,fg,true,10,true)};
+    wsSum[cellAddr(1,srow)]={t:'n',v:t,s:hStyle(bg,fg,false,10,false,'center')};
+    wsSum[cellAddr(2,srow)]={t:'n',v:d,s:hStyle(COLOR.doneBg,COLOR.doneFg,true,10,false,'center')};
+    wsSum[cellAddr(3,srow)]={t:'n',v:t-d,s:hStyle('FFE5E5','C0392B',true,10,false,'center')};
+    wsSum[cellAddr(4,srow)]={t:'s',v:p+'%',s:hStyle(bg,fg,true,11,false,'center')};
+    wsSum[cellAddr(5,srow)]={t:'s',v:status,s:hStyle(bg,fg,false,10,false,'center')};srow++;
+  });
+  wsSum['!ref']=`A1:F${srow}`;wsSum['!merges']=sumMerges;
+  wsSum['!cols']=[{wch:35},{wch:18},{wch:14},{wch:14},{wch:14},{wch:14}];
+  wsSum['!rows']=Array.from({length:srow},()=>({hpt:24}));
+  XLSX.utils.book_append_sheet(wb,wsSum,'الملخص العام');
+  const sn=wb.SheetNames;const si=sn.indexOf('الملخص العام');
+  if(si>0){sn.splice(si,1);sn.unshift('الملخص العام');}
+  XLSX.writeFile(wb,'خطة_جدحفص_'+new Date().toLocaleDateString('ar').replace(/\//g,'-')+'.xlsx');
+}
+
+// ============ START ============
+init();
+</script>
+</div>
+</body>
+</html>
